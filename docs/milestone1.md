@@ -45,6 +45,6 @@
 | רכיב | דריה זוטובה | אלינה לוקיאנוב |
 | :--- | :---: | :---: |
 | **חוזי כלים, ולידציה ו-`run_tool` (`src/tools.py`)** | תכנון סכמות JSON וחילוץ מובנה (`parse_resume`, `parse_vacancy`) | מימוש `compute_gap`, `search_question_bank`, ניסיונות חוזרים ולוג ביצוע |
-| **אבטחה, מסנן דו-שכבתי ושמירה באישור** | מימוש מסנן נושאים אסורים (עברית/אנגלית) והגנת Prompt Injection | אכיפת דגל אישור ב-`save_prep_plan` ובניית בנק השאלות (`data/question_bank.json`) |
+| **אבטחה, מסנן דו-שכבתי ושמירה באישור** | מימוש מסנן נושאים אסורים (עברית/אנגלית) והגנת Prompt Injection | אכיפת דגל אישור ב-`save_prep_plan`, בניית בנק השאלות (`data/question_bank.json`) וקובץ בדיקת המסנן (`data/filter_test_questions.json`) |
 | **ניהול מצב, זיכרון והשוואת הקשר (`src/state.py`)** | הגדרת `AgentState`, `apply_event` ובדיקות בידוד ב-`ThreadStore` | מימוש `NoteStore`, חסימת מידע רגיש והשוואת אסטרטגיות ב-`build_context` |
-| **לולאת סוכן, בדיקות, עקבות ותיעוד** | כתיבת `src/agent.py`, הפקת קבצי עקבות (`traces/`) ומחברת Colab | כתיבת `tests/test_tools.py`, `tests/test_state.py`, `README.md` ומסמך התיעוד |
+| **לולאת סוכן, בדיקות, עקבות ותיעוד** | כתיבת `src/agent.py` ו-`src/llm.py` (מודל מדומה ו-Gemini), הפקת קבצי עקבות (`traces/`) ומחברת Colab | כתיבת `tests/test_tools.py`, `tests/test_state.py`, `tests/test_agent.py`, `tests/test_llm.py`, `README.md` ומסמך התיעוד |
