@@ -19,6 +19,7 @@ the code in agent.py, so the model cannot forge it.
 import json
 import os
 import re
+import time
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
@@ -60,6 +61,30 @@ AGENT_SYSTEM_PROMPT = (
 )
 
 TARGET_QUESTIONS = (8, 12)
+
+RETRYABLE_CODES = (429, 500, 503, 504)
+
+
+def _retry_delay(err: Exception, attempt: int) -> float:
+    """Waits as long as the API asks ("retry in 12s"), otherwise 5s, 10s, 20s (max 60s)."""
+    m = re.search(r"retry in ([\d.]+)s", str(err), re.I) or re.search(r"retryDelay'?:\s*'?(\d+)s", str(err))
+    return min(60.0, float(m.group(1)) + 1) if m else min(60.0, 5.0 * 2 ** attempt)
+
+
+def generate_with_retry(client: Any, model: str, contents: Any, config: Any,
+                        max_attempts: int = 4, sleep: Any = None) -> Any:
+    """One model call with retries on temporary API errors (429 rate limit, 500/503/504), like
+    llm_generate in the class notebook. A daily quota ("per day") is not retried: waiting will not help."""
+    for attempt in range(max_attempts):
+        try:
+            return client.models.generate_content(model=model, contents=contents, config=config)
+        except Exception as e:
+            text = str(e).lower()
+            daily = "perday" in text.replace(" ", "") or "per day" in text
+            if getattr(e, "code", None) in RETRYABLE_CODES and not daily and attempt < max_attempts - 1:
+                (sleep or time.sleep)(_retry_delay(e, attempt))
+                continue
+            raise
 
 
 @dataclass
@@ -193,10 +218,9 @@ class GeminiLLM:
             + "\n\nCurrent state: " + state_brief(state)
             + "\nDecide the next action: call exactly one tool, or answer with a short final message."
         )
-        resp = self.client.models.generate_content(
-            model=self.model,
-            contents=prompt,
-            config=types.GenerateContentConfig(
+        resp = generate_with_retry(
+            self.client, self.model, prompt,
+            types.GenerateContentConfig(
                 system_instruction=AGENT_SYSTEM_PROMPT,
                 tools=self._tools,
                 temperature=0,
@@ -210,10 +234,9 @@ class GeminiLLM:
 
     def answer(self, context: list[str]) -> str:
         types = self._types
-        resp = self.client.models.generate_content(
-            model=self.model,
-            contents="\n".join(context[1:]),
-            config=types.GenerateContentConfig(system_instruction=context[0], temperature=0),
+        resp = generate_with_retry(
+            self.client, self.model, "\n".join(context[1:]),
+            types.GenerateContentConfig(system_instruction=context[0], temperature=0),
         )
         return (resp.text or "").strip()
 
@@ -272,12 +295,11 @@ class GeminiExtractor:
     def _ask(self, text: str, schema: dict[str, Any], what: str) -> dict[str, Any]:
         types = self._types
         try:
-            resp = self.client.models.generate_content(
-                model=self.model,
-                contents=f"Extract the {what} from this text:\n\n{text}",
-                config=types.GenerateContentConfig(system_instruction=EXTRACT_SYSTEM, temperature=0,
-                                                   response_mime_type="application/json",
-                                                   response_json_schema=schema),
+            resp = generate_with_retry(
+                self.client, self.model, f"Extract the {what} from this text:\n\n{text}",
+                types.GenerateContentConfig(system_instruction=EXTRACT_SYSTEM, temperature=0,
+                                            response_mime_type="application/json",
+                                            response_json_schema=schema),
             )
         except Exception as e:
             code = getattr(e, "code", None)

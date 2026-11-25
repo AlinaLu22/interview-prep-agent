@@ -89,7 +89,8 @@ def test_gemini_extractor_invalid_json_is_permanent():
 
 
 @pytest.mark.parametrize("code,error", [(503, TransientError), (429, TransientError), (400, PermanentError)])
-def test_gemini_extractor_error_classes(code, error):
+def test_gemini_extractor_error_classes(code, error, monkeypatch):
+    monkeypatch.setattr("src.llm.time.sleep", lambda s: None)  # no real waiting between retries in tests
     ext = GeminiExtractor(client=SimpleNamespace(models=FailingModels(code)), model="m")
     with pytest.raises(error):
         ext.extract_vacancy("Junior DevOps. Mandatory: Docker.")
@@ -121,3 +122,40 @@ def test_pick_model_falls_back_to_newest_flash_when_preferred_is_retired():
 def test_pick_model_when_listing_fails():
     broken = SimpleNamespace(models=SimpleNamespace(list=lambda: (_ for _ in ()).throw(RuntimeError("no network"))))
     assert pick_gemini_model(broken) == DEFAULT_GEMINI_MODEL
+
+
+# ---------------------------------------------------------------- retries on temporary API errors
+from src.llm import generate_with_retry
+
+
+class Err(Exception):
+    def __init__(self, code, msg="MOCK API error"):
+        super().__init__(msg)
+        self.code = code
+
+
+class SometimesFailing:
+    """MOCK of client.models: fails with the given errors first, then answers."""
+    def __init__(self, errors):
+        self.errors, self.calls = list(errors), 0
+
+    def generate_content(self, model, contents, config):
+        self.calls += 1
+        if self.errors:
+            raise self.errors.pop(0)
+        return "ok"
+
+
+def test_rate_limit_is_retried_with_the_wait_the_api_asks_for():
+    models, waits = SometimesFailing([Err(429, "Quota exceeded. Please retry in 7.5s."), Err(503)]), []
+    client = SimpleNamespace(models=models)
+    assert generate_with_retry(client, "m", "hi", None, sleep=waits.append) == "ok"
+    assert models.calls == 3 and waits == [8.5, 10.0]
+
+
+def test_daily_quota_and_bad_request_are_not_retried():
+    for err in (Err(429, "Quota exceeded for metric ...PerDay..."), Err(400)):
+        models = SometimesFailing([err])
+        with pytest.raises(Err):
+            generate_with_retry(SimpleNamespace(models=models), "m", "hi", None, sleep=lambda s: None)
+        assert models.calls == 1

@@ -285,6 +285,7 @@ PARSE_RESUME_CONTRACT = {
                    "with the model; the code validates the JSON and keeps only skills whose source line is "
                    "really in the text. Lines that look like prompt injection are dropped and reported.",
     "type": "model (extraction) + schema validation in code",  # as in the proposal tools table
+    "timeout_s": 120,  # calls the model (with its own retries on rate limits)
     "side_effect": "none",
     "requires_approval": False,
     "input_schema": {
@@ -322,6 +323,7 @@ PARSE_VACANCY_CONTRACT = {
                    "requirements and their source lines from a job description with the model; "
                    "the code validates the JSON and the source lines.",
     "type": "model (extraction) + schema validation in code",  # as in the proposal tools table
+    "timeout_s": 120,  # calls the model (with its own retries on rate limits)
     "side_effect": "none",
     "requires_approval": False,
     "input_schema": {
