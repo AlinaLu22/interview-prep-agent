@@ -159,3 +159,20 @@ def test_daily_quota_and_bad_request_are_not_retried():
         with pytest.raises(Err):
             generate_with_retry(SimpleNamespace(models=models), "m", "hi", None, sleep=lambda s: None)
         assert models.calls == 1
+
+
+def test_after_a_per_minute_limit_calls_are_spaced(monkeypatch):
+    clock = {"t": 0.0}
+    monkeypatch.setattr("src.llm._now", lambda: clock["t"])
+    waits = []
+
+    def fake_sleep(s):
+        waits.append(round(s, 1))
+        clock["t"] += s
+
+    msg = "429 Quota exceeded, limit: 5, model: m, requests per minute limit exceeded. Please retry in 30s."
+    models = SometimesFailing([Err(429, msg)])
+    client = SimpleNamespace(models=models)
+    generate_with_retry(client, "m", "a", None, sleep=fake_sleep)  # 429 -> waits 31s -> ok
+    generate_with_retry(client, "m", "b", None, sleep=fake_sleep)  # next call is spaced: 60/5 + 0.5 s
+    assert waits == [31.0, 12.5] and models.calls == 3

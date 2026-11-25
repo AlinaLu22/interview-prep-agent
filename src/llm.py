@@ -71,18 +71,39 @@ def _retry_delay(err: Exception, attempt: int) -> float:
     return min(60.0, float(m.group(1)) + 1) if m else min(60.0, 5.0 * 2 ** attempt)
 
 
+_THROTTLE: dict[int, dict[str, float]] = {}  # per client: minimum seconds between calls, time of the last call
+
+
+def _now() -> float:
+    return time.monotonic()
+
+
 def generate_with_retry(client: Any, model: str, contents: Any, config: Any,
-                        max_attempts: int = 4, sleep: Any = None) -> Any:
+                        max_attempts: int = 6, sleep: Any = None) -> Any:
     """One model call with retries on temporary API errors (429 rate limit, 500/503/504), like
-    llm_generate in the class notebook. A daily quota ("per day") is not retried: waiting will not help."""
+    llm_generate in the class notebook. A daily quota ("per day") is not retried: waiting will not help.
+    After a per-minute rate limit ("limit: 5"), calls through this client are spaced to stay under it."""
+    wait_fn = sleep or time.sleep
+    state = _THROTTLE.setdefault(id(client), {"interval": 0.0, "last": -1e9})
     for attempt in range(max_attempts):
+        gap = state["last"] + state["interval"] - _now()
+        if gap > 0:
+            wait_fn(gap)
         try:
+            state["last"] = _now()
             return client.models.generate_content(model=model, contents=contents, config=config)
         except Exception as e:
             text = str(e).lower()
             daily = "perday" in text.replace(" ", "") or "per day" in text
             if getattr(e, "code", None) in RETRYABLE_CODES and not daily and attempt < max_attempts - 1:
-                (sleep or time.sleep)(_retry_delay(e, attempt))
+                limit = re.search(r"limit:\s*(\d+)", text)
+                if getattr(e, "code", None) == 429 and limit and "minute" in text:
+                    state["interval"] = max(state["interval"], 60.0 / max(1, int(limit.group(1))) + 0.5)
+                delay = _retry_delay(e, attempt)
+                print(f"[gemini] {getattr(e, 'code', '')} {'rate limit' if getattr(e, 'code', None) == 429 else 'server error'}"
+                      f" - waiting {delay:.0f}s, then retry {attempt + 2}/{max_attempts}", flush=True)
+                wait_fn(delay)
+                state["last"] = _now() - state["interval"]  # the retry itself goes right after this wait
                 continue
             raise
 
