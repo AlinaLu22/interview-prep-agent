@@ -62,7 +62,7 @@ Step budget: 14 (tool calls including retries, plus the model's final decision).
 
 ## Installation & Running
 
-### 1. Setup (Python 3.11+; Google Colab uses 3.12)
+### 1. Setup (Python 3.11+; checked on 3.12 and on 3.13, the version Google Colab uses)
 ```bash
 git clone https://github.com/AlinaLu22/interview-prep-agent.git
 cd interview-prep-agent
