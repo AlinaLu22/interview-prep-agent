@@ -83,7 +83,7 @@ Writes `docs/traces/trace_normal.jsonl` and `docs/traces/trace_transient.jsonl`.
 ### 4. Run one conversation with the real model (optional)
 ```bash
 export GEMINI_API_KEY="..."          # never commit the key
-export GEMINI_MODEL="gemini-2.5-flash" # optional, this is the default
+export GEMINI_MODEL="gemini-3.5-flash" # optional; without it the newest available Flash model is used
 python -m src.agent --live
 ```
 

@@ -24,7 +24,9 @@ from typing import Any, Literal
 
 from src.tools import CONTRACTS, SKILL_NAMES, KeywordExtractor, PermanentError, TransientError
 
-DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"  # override with the GEMINI_MODEL environment variable
+# Preferred model (the one used in class). If Google has retired it, pick_gemini_model() takes the newest
+# available Flash model instead. Set the GEMINI_MODEL environment variable to force a specific model.
+DEFAULT_GEMINI_MODEL = "gemini-3.5-flash"
 
 # What the MODEL may choose for each tool. Everything else is filled in by code.
 MODEL_TOOL_PARAMS: dict[str, dict[str, Any]] = {
@@ -173,7 +175,7 @@ class GeminiLLM:
                 raise RuntimeError("GEMINI_API_KEY is not set")
             client = genai.Client(api_key=key)  # explicit key: works with any google-genai version
         self.client = client
-        self.model = model or os.environ.get("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
+        self.model = model or os.environ.get("GEMINI_MODEL") or pick_gemini_model(client)
         self.extractor = GeminiExtractor(client=self.client, model=self.model)
         self._tools = [types.Tool(function_declarations=[
             types.FunctionDeclaration(
@@ -295,6 +297,20 @@ class GeminiExtractor:
 
     def extract_vacancy(self, text: str) -> dict[str, Any]:
         return self._ask(text, VACANCY_JSON_SCHEMA, "role title and requirements (mandatory or nice to have)")
+
+
+def pick_gemini_model(client: Any, preferred: str = DEFAULT_GEMINI_MODEL) -> str:
+    """Asks the API which models this key can use: the preferred model if it is still available,
+    otherwise the newest Flash text model. Models get retired (gemini-2.5-flash returned 404 in Nov 2026)."""
+    try:
+        names = [m.name.split("/")[-1] for m in client.models.list()
+                 if "generateContent" in (getattr(m, "supported_actions", None) or [])]
+    except Exception:
+        return preferred  # listing failed: try the preferred model and let the call report the error
+    if preferred in names:
+        return preferred
+    flash = [n for n in names if "flash" in n and not any(x in n for x in ("lite", "image", "tts", "live", "audio"))]
+    return sorted(flash)[-1] if flash else preferred
 
 
 def make_llm() -> Any:

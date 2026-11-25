@@ -98,3 +98,26 @@ def test_gemini_extractor_error_classes(code, error):
 def test_gemini_llm_brings_its_extractor():
     llm = GeminiLLM(client=fake_client(response_with_parts([types.Part(text="ok")])), model="m")
     assert isinstance(llm.extractor, GeminiExtractor)
+
+
+# ---------------------------------------------------------------- choosing an available Gemini model
+from src.llm import DEFAULT_GEMINI_MODEL, pick_gemini_model
+
+
+def listing(*names, action="generateContent"):
+    models = [SimpleNamespace(name=f"models/{n}", supported_actions=[action]) for n in names]
+    return SimpleNamespace(models=SimpleNamespace(list=lambda: models))
+
+
+def test_pick_model_keeps_the_preferred_one_when_available():
+    assert pick_gemini_model(listing("gemini-3.6-flash", DEFAULT_GEMINI_MODEL)) == DEFAULT_GEMINI_MODEL
+
+
+def test_pick_model_falls_back_to_newest_flash_when_preferred_is_retired():
+    client = listing("gemini-3.6-flash", "gemini-3.8-flash", "gemini-3.8-flash-lite", "gemini-3.8-pro")
+    assert pick_gemini_model(client) == "gemini-3.8-flash"
+
+
+def test_pick_model_when_listing_fails():
+    broken = SimpleNamespace(models=SimpleNamespace(list=lambda: (_ for _ in ()).throw(RuntimeError("no network"))))
+    assert pick_gemini_model(broken) == DEFAULT_GEMINI_MODEL
