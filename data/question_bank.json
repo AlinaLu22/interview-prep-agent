@@ -1,0 +1,137 @@
+[
+  {
+    "id": "q01",
+    "topic": "Python",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "python list tuple dict generator",
+    "question": "What is the difference between a list and a tuple in Python, and when would you use a generator?",
+    "look_for": "mutability, memory use, lazy evaluation"
+  },
+  {
+    "id": "q02",
+    "topic": "Python",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "python exceptions error handling retry",
+    "question": "How do you handle errors and retries in a Python script that calls an external API?",
+    "look_for": "try/except, specific exceptions, backoff, logging"
+  },
+  {
+    "id": "q03",
+    "topic": "SQL",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "sql join database query index",
+    "question": "Explain INNER JOIN vs LEFT JOIN, and how an index speeds up a query.",
+    "look_for": "join semantics, B-tree index, trade-off on writes"
+  },
+  {
+    "id": "q04",
+    "topic": "Docker",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "docker container image dockerfile devops",
+    "question": "What is the difference between a Docker image and a container? How do you keep images small?",
+    "look_for": "layers, multi-stage builds, slim base images"
+  },
+  {
+    "id": "q05",
+    "topic": "Docker",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "docker compose network volume bridge",
+    "question": "How do containers communicate in Docker Compose, and how do you persist data across container restarts?",
+    "look_for": "bridge networks, service DNS, named volumes vs bind mounts"
+  },
+  {
+    "id": "q06",
+    "topic": "Linux",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "linux bash permissions process systemd",
+    "question": "A service on a Linux server does not start. How do you troubleshoot it?",
+    "look_for": "systemctl status, journalctl, permissions, ports"
+  },
+  {
+    "id": "q07",
+    "topic": "CI/CD",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "ci cd pipeline github actions jenkins test build deploy",
+    "question": "What are the main stages of a CI/CD pipeline for a Python application, and how do you prevent broken code from reaching production?",
+    "look_for": "linting, unit tests, build artifact, staging, automated gates"
+  },
+  {
+    "id": "q08",
+    "topic": "CI/CD",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "ci cd rollback deployment blue green canary",
+    "question": "A deployment introduces a critical bug in production. How does a CI/CD setup help you recover quickly?",
+    "look_for": "automated rollback, immutable artifacts, health checks"
+  },
+  {
+    "id": "q09",
+    "topic": "Git",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "git branch merge rebase ci conflict",
+    "question": "What is the difference between merge and rebase? How do you resolve a merge conflict?",
+    "look_for": "history, conflict markers, team workflow"
+  },
+  {
+    "id": "q10",
+    "topic": "Networking",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "network tcp udp dns http networking",
+    "question": "What happens from the moment you type a URL in the browser until the page loads?",
+    "look_for": "DNS, TCP handshake, TLS, HTTP request/response"
+  },
+  {
+    "id": "q11",
+    "topic": "Cloud / AWS",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "aws cloud iam ec2 s3 security",
+    "question": "How would you secure an S3 bucket and give an EC2 instance access to it?",
+    "look_for": "IAM roles, least privilege, block public access, encryption"
+  },
+  {
+    "id": "q12",
+    "topic": "Security",
+    "category": "technical",
+    "level": "junior",
+    "keywords": "security hardening vulnerability siem ssh",
+    "question": "How would you harden a new Linux server before it goes to production?",
+    "look_for": "updates, SSH config, firewall, least privilege, auditing"
+  },
+  {
+    "id": "q13",
+    "topic": "Teamwork",
+    "category": "behavioral",
+    "level": "junior",
+    "keywords": "team teamwork conflict collaboration",
+    "question": "Tell me about a disagreement with a teammate and how you resolved it.",
+    "look_for": "STAR structure, listening, outcome"
+  },
+  {
+    "id": "q14",
+    "topic": "Learning",
+    "category": "behavioral",
+    "level": "junior",
+    "keywords": "learn learning new technology gap",
+    "question": "The job requires a technology you have not used yet. How would you get up to speed?",
+    "look_for": "concrete plan, resources, past example"
+  },
+  {
+    "id": "q15",
+    "topic": "Teamwork",
+    "category": "behavioral",
+    "level": "junior",
+    "keywords": "team teamwork collaboration communication",
+    "question": "Tell me about a time you had to explain a technical problem to a teammate who was not technical.",
+    "look_for": "clear explanation, empathy, checking understanding, outcome"
+  }
+]

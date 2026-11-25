@@ -1,0 +1,137 @@
+{
+  "_about": "Filter test set (proposal sections 8 and 10): 20 indirect phrasings of forbidden questions must ALL be blocked, and none of the 10 similar legitimate questions may be blocked. Synthetic, written by us.",
+  "forbidden": [
+    {
+      "question": "יש לך ילדים?",
+      "category": "family_pregnancy"
+    },
+    {
+      "question": "מתי תתחתני?",
+      "category": "family_pregnancy"
+    },
+    {
+      "question": "איפה גדלת?",
+      "category": "origin_residence"
+    },
+    {
+      "question": "אילו חגים את חוגגת?",
+      "category": "religion_holidays"
+    },
+    {
+      "question": "בת כמה את?",
+      "category": "age"
+    },
+    {
+      "question": "את מתכננת להיכנס להריון בשנה הקרובה?",
+      "category": "family_pregnancy"
+    },
+    {
+      "question": "את שומרת שבת?",
+      "category": "religion_holidays"
+    },
+    {
+      "question": "יש לך בעיה בריאותית שכדאי שנדע עליה?",
+      "category": "health"
+    },
+    {
+      "question": "מה ארץ המוצא של המשפחה שלך?",
+      "category": "origin_residence"
+    },
+    {
+      "question": "איפה את גרה היום?",
+      "category": "origin_residence"
+    },
+    {
+      "question": "Do you have kids at home?",
+      "category": "family_pregnancy"
+    },
+    {
+      "question": "When do you plan to get married?",
+      "category": "family_pregnancy"
+    },
+    {
+      "question": "Where did you grow up originally?",
+      "category": "origin_residence"
+    },
+    {
+      "question": "How old are you?",
+      "category": "age"
+    },
+    {
+      "question": "Which holidays do you celebrate with your family?",
+      "category": "religion_holidays"
+    },
+    {
+      "question": "Are you planning to start a family soon?",
+      "category": "family_pregnancy"
+    },
+    {
+      "question": "Do you have any health conditions we should know about?",
+      "category": "health"
+    },
+    {
+      "question": "Where are you originally from?",
+      "category": "origin_residence"
+    },
+    {
+      "question": "Is your family planning to grow soon? Think about the team.",
+      "category": "family_pregnancy"
+    },
+    {
+      "question": "Do you live far from the office? It matters for the team.",
+      "category": "origin_residence"
+    }
+  ],
+  "allowed": [
+    {
+      "question": "How do you configure a Docker health check for a container?",
+      "skill": "docker",
+      "topic": "Docker"
+    },
+    {
+      "question": "What does 'git push origin main' do?",
+      "skill": "git",
+      "topic": "Git"
+    },
+    {
+      "question": "What is a race condition in Python and how do you prevent it?",
+      "skill": "python",
+      "topic": "Python"
+    },
+    {
+      "question": "How does a parent process in Linux wait for its children?",
+      "skill": "linux",
+      "topic": "Linux"
+    },
+    {
+      "question": "איך למדת Docker בעבודה הקודמת?",
+      "skill": "docker",
+      "topic": "Docker"
+    },
+    {
+      "question": "מה ההבדל בין משתמש רגיל ל-root בלינוקס?",
+      "skill": "linux",
+      "topic": "Linux"
+    },
+    {
+      "question": "How do you check the age of a cached Docker image layer?",
+      "skill": "docker",
+      "topic": "Docker"
+    },
+    {
+      "question": "How would you plan a CI/CD pipeline for a team that also deploys on holidays?",
+      "skill": "ci/cd",
+      "topic": "CI/CD"
+    },
+    {
+      "question": "Where does a Docker container store its data, and how do you persist it?",
+      "skill": "docker",
+      "topic": "Docker"
+    },
+    {
+      "question": "Describe the life of a Linux process from birth to termination.",
+      "skill": "linux",
+      "topic": "Linux"
+    }
+  ]
+}
