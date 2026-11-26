@@ -1,0 +1,33 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	intake(intake)
+	clarify(clarify)
+	decide(decide)
+	approval_gate(approval_gate)
+	act(act)
+	budget_stop(budget_stop)
+	finish(finish)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> intake;
+	act -.-> decide;
+	act -.-> finish;
+	approval_gate --> act;
+	budget_stop --> finish;
+	clarify --> intake;
+	decide -.-> act;
+	decide -.-> approval_gate;
+	decide -.-> budget_stop;
+	decide -.-> finish;
+	intake -.-> clarify;
+	intake -.-> decide;
+	intake -.-> finish;
+	finish --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+
