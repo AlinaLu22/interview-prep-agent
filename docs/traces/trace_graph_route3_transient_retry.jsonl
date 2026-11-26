@@ -1,0 +1,44 @@
+{"phase": "node", "node": "intake", "changed": ["messages"]}
+{"phase": "input", "thread_id": "route3-transient-1", "user_id": "alina", "model": "mock", "max_steps": 14, "resume_chars": 212, "vacancy_chars": 89}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 1, "decided_by": "mock", "tool": "parse_resume", "model_args": {}, "context_items": 2}
+{"phase": "node", "node": "act", "changed": ["messages", "next_action", "resume_json", "retry_count", "step", "tool_log"]}
+{"phase": "tool_call", "step": 1, "decided_by": "mock", "tool": "parse_resume", "args": {"resume_text": "<text: 212 chars>"}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 2, "observation": {"skills": ["python (1.5y)", "linux (1.5y)", "git (1.5y)"], "injection_warning": false}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 2, "decided_by": "mock", "tool": "parse_vacancy", "model_args": {}, "context_items": 3}
+{"phase": "node", "node": "act", "changed": ["messages", "next_action", "retry_count", "step", "tool_log", "vacancy_json"]}
+{"phase": "tool_call", "step": 2, "decided_by": "mock", "tool": "parse_vacancy", "args": {"vacancy_text": "<text: 89 chars>"}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 1, "observation": {"role": "Junior DevOps Engineer", "must_have": ["python", "docker", "ci/cd", "linux"], "nice_to_have": []}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 3, "decided_by": "mock", "tool": "compute_gap", "model_args": {}, "context_items": 4}
+{"phase": "node", "node": "act", "changed": ["gap_json", "messages", "next_action", "retry_count", "step", "tool_log"]}
+{"phase": "tool_call", "step": 3, "decided_by": "mock", "tool": "compute_gap", "args": {"resume_json": "<object: keys ['injection_warning', 'skills']>", "vacancy_json": "<object: keys ['must_have', 'nice_to_have', 'role', 'source_lines']>"}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 1, "observation": {"matched": ["python", "linux"], "missing": ["docker", "ci/cd"], "weak": []}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 4, "decided_by": "mock", "tool": "search_question_bank", "model_args": {"skill": "docker", "top_k": 2}, "context_items": 5}
+{"phase": "node", "node": "act", "changed": ["candidate_questions", "messages", "next_action", "retry_count", "searched_skills", "step", "tool_log"]}
+{"phase": "tool_call", "step": 5, "decided_by": "mock", "tool": "search_question_bank", "args": {"level": "junior", "skill": "docker", "top_k": 2}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 2, "retries": ["attempt 1: MOCK: simulated search_question_bank outage (503)"], "latency_ms": 53, "observation": {"results": ["q04: Docker", "q05: Docker"]}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 6, "decided_by": "mock", "tool": "search_question_bank", "model_args": {"skill": "ci/cd", "top_k": 2}, "context_items": 6}
+{"phase": "node", "node": "act", "changed": ["candidate_questions", "messages", "next_action", "retry_count", "searched_skills", "step", "tool_log"]}
+{"phase": "tool_call", "step": 6, "decided_by": "mock", "tool": "search_question_bank", "args": {"level": "junior", "skill": "ci/cd", "top_k": 2}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 2, "observation": {"results": ["q07: CI/CD", "q08: CI/CD"]}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 7, "decided_by": "mock", "tool": "search_question_bank", "model_args": {"skill": "python", "top_k": 2}, "context_items": 7}
+{"phase": "node", "node": "act", "changed": ["candidate_questions", "messages", "next_action", "retry_count", "searched_skills", "step", "tool_log"]}
+{"phase": "tool_call", "step": 7, "decided_by": "mock", "tool": "search_question_bank", "args": {"level": "junior", "skill": "python", "top_k": 2}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 2, "observation": {"results": ["q01: Python", "q02: Python"]}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 8, "decided_by": "mock", "tool": "search_question_bank", "model_args": {"skill": "linux", "top_k": 2}, "context_items": 7}
+{"phase": "node", "node": "act", "changed": ["candidate_questions", "messages", "next_action", "retry_count", "searched_skills", "step", "tool_log"]}
+{"phase": "tool_call", "step": 8, "decided_by": "mock", "tool": "search_question_bank", "args": {"level": "junior", "skill": "linux", "top_k": 2}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 2, "observation": {"results": ["q06: Linux", "q12: Security"]}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 9, "decided_by": "mock", "tool": "search_question_bank", "model_args": {"skill": "teamwork", "category": "behavioral", "top_k": 2}, "context_items": 7}
+{"phase": "node", "node": "act", "changed": ["candidate_questions", "messages", "next_action", "retry_count", "searched_skills", "step", "tool_log"]}
+{"phase": "tool_call", "step": 9, "decided_by": "mock", "tool": "search_question_bank", "args": {"level": "junior", "skill": "teamwork", "category": "behavioral", "top_k": 2}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 2, "observation": {"results": ["q13: Teamwork", "q15: Teamwork"]}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 10, "decided_by": "mock", "tool": "save_prep_plan", "model_args": {"plan_name": "alina_route3-transient-1_plan"}, "context_items": 7}
+{"phase": "node", "node": "approval_gate", "changed": ["approved"]}
+{"phase": "approval_gate", "approved": true, "question_count": 10}
+{"phase": "node", "node": "act", "changed": ["messages", "next_action", "retry_count", "saved_plan_path", "step", "tool_log"]}
+{"phase": "tool_call", "step": 10, "decided_by": "mock", "tool": "save_prep_plan", "args": {"plan_name": "alina_route3-transient-1_plan", "questions": "<list: 10 items>", "approved": true}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 2, "observation": {"saved": true, "file_path": "prep_plans/alina_route3-transient-1_plan.json", "question_count": 10}}
+{"phase": "node", "node": "decide", "changed": ["model_text", "next_action", "step", "stop_reason"]}
+{"phase": "final_decision", "step": 11, "decided_by": "mock"}
+{"phase": "node", "node": "finish", "changed": ["answer", "messages", "resume_text", "status", "stop_reason", "vacancy_text"]}
+{"phase": "done", "status": "DONE", "stop_reason": "model_final_answer", "steps_used": 11, "max_steps": 14, "retries": 1, "question_count": 10, "saved": true}

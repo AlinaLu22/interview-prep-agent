@@ -1,0 +1,19 @@
+{"phase": "node", "node": "intake", "changed": ["messages"]}
+{"phase": "input", "thread_id": "route4-budget", "user_id": "daria", "model": "mock", "max_steps": 3, "resume_chars": 212, "vacancy_chars": 89}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 1, "decided_by": "mock", "tool": "parse_resume", "model_args": {}, "context_items": 2}
+{"phase": "node", "node": "act", "changed": ["messages", "next_action", "resume_json", "retry_count", "step", "tool_log"]}
+{"phase": "tool_call", "step": 1, "decided_by": "mock", "tool": "parse_resume", "args": {"resume_text": "<text: 212 chars>"}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 3, "observation": {"skills": ["python (1.5y)", "linux (1.5y)", "git (1.5y)"], "injection_warning": false}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 2, "decided_by": "mock", "tool": "parse_vacancy", "model_args": {}, "context_items": 3}
+{"phase": "node", "node": "act", "changed": ["messages", "next_action", "retry_count", "step", "tool_log", "vacancy_json"]}
+{"phase": "tool_call", "step": 2, "decided_by": "mock", "tool": "parse_vacancy", "args": {"vacancy_text": "<text: 89 chars>"}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 2, "observation": {"role": "Junior DevOps Engineer", "must_have": ["python", "docker", "ci/cd", "linux"], "nice_to_have": []}}
+{"phase": "node", "node": "decide", "changed": ["next_action"]}
+{"phase": "decision", "step": 3, "decided_by": "mock", "tool": "compute_gap", "model_args": {}, "context_items": 4}
+{"phase": "node", "node": "act", "changed": ["gap_json", "messages", "next_action", "retry_count", "step", "tool_log"]}
+{"phase": "tool_call", "step": 3, "decided_by": "mock", "tool": "compute_gap", "args": {"resume_json": "<object: keys ['injection_warning', 'skills']>", "vacancy_json": "<object: keys ['must_have', 'nice_to_have', 'role', 'source_lines']>"}, "decision": "executed", "status": "ok", "error_type": null, "reason": "", "attempts": 1, "retries": [], "latency_ms": 2, "observation": {"matched": ["python", "linux"], "missing": ["docker", "ci/cd"], "weak": []}}
+{"phase": "node", "node": "decide", "changed": ["next_action", "stop_reason"]}
+{"phase": "node", "node": "budget_stop", "changed": []}
+{"phase": "budget_stop", "step": 3, "max_steps": 3, "detail": "step budget used up: the run is stopped in a controlled way"}
+{"phase": "node", "node": "finish", "changed": ["answer", "messages", "resume_text", "status", "stop_reason", "vacancy_text"]}
+{"phase": "done", "status": "stopped_step_budget", "stop_reason": "step_budget_exhausted", "steps_used": 3, "max_steps": 3, "retries": 0, "question_count": 0, "saved": false}
